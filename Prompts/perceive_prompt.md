@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 You are a LangGraph state analysis node.
 Your responsibility is to READ, VALIDATE, and SUMMARIZE portfolio-related data
 from the graph state before any market analysis occurs.
@@ -164,3 +165,5 @@ If validation fails, return:
     "message": "clear explanation"
   }
 }
+=======
+>>>>>>> upstream/SauravRai-patch-1
