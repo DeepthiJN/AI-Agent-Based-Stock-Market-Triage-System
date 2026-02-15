@@ -1,18 +1,37 @@
 stateDiagram-v2
-    [*] --> intake
-    intake --> missing_info_check
+    [*] --> Validate_Inputs
 
-    missing_info_check --> data_ingestion: data complete
-    missing_info_check --> missing_info_check: ask for missing inputs
+    Validate_Inputs --> Ingest_Data: Valid
+    Validate_Inputs --> Reject_Request: Invalid Inputs
 
-    data_ingestion --> signal_detection
-    signal_detection --> risk_evaluation
-    risk_evaluation --> proposal_generation
+    Ingest_Data --> Detect_Signal: Data OK
+    Ingest_Data --> Data_Error: API Failure / Missing Data
 
-    proposal_generation --> human_approval: hitl_required == true
-    proposal_generation --> finalize: hitl_required == false
+    Detect_Signal --> Evaluate_Risk: Signal Found
+    Detect_Signal --> No_Trade: No Valid Signal
 
-    human_approval --> finalize: approved
-    human_approval --> proposal_generation: rejected/adjustment
+    Evaluate_Risk --> Generate_Proposal: Risk Within Limits
+    Evaluate_Risk --> Risk_Violation: Exceeds Policy
 
-    finalize --> [*]
+    Generate_Proposal --> Await_User
+
+    Await_User --> Paper_Trade: Approved
+    Await_User --> Modify_Risk: Adjust Risk
+    Await_User --> Cancel: User Reject
+    Await_User --> Timeout: No Response
+
+    Modify_Risk --> Evaluate_Risk
+
+    Paper_Trade --> Log_Trade: Target Hit
+    Paper_Trade --> Log_Trade: Stop Loss Hit
+    Paper_Trade --> Simulation_Error: Invalid Price Path
+
+    Log_Trade --> [*]
+
+    Reject_Request --> [*]
+    Data_Error --> [*]
+    No_Trade --> [*]
+    Risk_Violation --> [*]
+    Cancel --> [*]
+    Timeout --> [*]
+    Simulation_Error --> [*]
